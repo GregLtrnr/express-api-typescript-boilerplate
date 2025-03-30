@@ -1,51 +1,87 @@
-import Joi from "joi";
-import { Request, Response, NextFunction } from "express";
+import Joi from 'joi';
+import { Request, Response, NextFunction } from 'express';
 
-type validatePayload = {
+type ValidatePayload = {
   params?: Joi.Schema<any>;
   query?: Joi.Schema<any>;
   body?: Joi.Schema<any>;
 };
 
-export function validate(schema: validatePayload) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const { params, query, body } = schema;
+/**
+ * Middleware function to validate request parameters, query, and body against a given schema.
+ *
+ * @param schema - An object containing validation schemas for `params`, `query`, and `body`.
+ *                 Each schema should have a `validate` method that performs the validation.
+ *
+ * @returns A middleware function that validates the request and sends a 400 response
+ *          if any validation fails. If all validations pass, the `next` middleware is called.
+ *
+ * @example
+ * ```typescript
+ * import { validate } from './middlewares/validate';
+ * import * as Joi from 'joi';
+ *
+ * const schema = {
+ *   params: Joi.object({ id: Joi.string().required() }),
+ *   query: Joi.object({ search: Joi.string().optional() }),
+ *   body: Joi.object({ name: Joi.string().required() }),
+ * };
+ *
+ * app.post('/example/:id', validate(schema), (req, res) => {
+ *   res.send('Validation passed!');
+ * });
+ * ```
+ *
+ * @throws {Error} If the request body is not an object or is missing when required.
+ * @throws {Error} If the request body contains invalid JSON.
+ */
+export function validate(schema: ValidatePayload) {
+  return (request: Request, response: Response, next: NextFunction): void => {
+    const { params: paramsSchema, query: querySchema, body: bodySchema } = schema;
 
-    if (params) {
-      const { error } = params.validate(req.params);
+    // Validate request parameters
+    if (paramsSchema) {
+      const { error } = paramsSchema.validate(request.params);
       if (error) {
-        console.log({ message: "Invalid params", error }, req);
-        return res.status(400).send();
+        console.log({ message: 'Invalid request parameters', error }, request);
+        response.status(400).send();
+        return;
       }
     }
 
-    if (query) {
-      const { error } = query.validate(req.query);
+    // Validate request query
+    if (querySchema) {
+      const { error } = querySchema.validate(request.query);
       if (error) {
-        console.log({ message: "Invalid query", error }, req);
-        return res.status(400).send();
+        console.log({ message: 'Invalid request query', error }, request);
+        response.status(400).send();
+        return;
       }
     }
 
-    if (body) {
+    // Validate request body
+    if (bodySchema) {
       try {
-        if (req.body) {
-          if (typeof req.body !== "object")
-            throw new Error("Body must be an object");
-          const { error } = body.validate(req.body);
+        if (request.body) {
+          if (typeof request.body !== 'object') {
+            throw new Error('Request body must be an object');
+          }
+          const { error } = bodySchema.validate(request.body);
           if (error) {
-            console.log({ message: "Invalid body", error }, req);
-            return res.status(400).send(error.message);
+            console.log({ message: 'Invalid request body', error }, request);
+            response.status(400).send(error.message);
+            return;
           }
         } else {
-          throw new Error("Body not provided");
+          throw new Error('Request body not provided');
         }
-      } catch (e: any) {
-        console.log({ message: "Invalid JSON body", error: e }, req);
-        return res.status(400).send(e.message || "Invalid JSON body");
+      } catch (error: any) {
+        console.log({ message: 'Invalid JSON in request body', error }, request);
+        response.status(400).send(error.message || 'Invalid JSON in request body');
+        return;
       }
     }
 
-    next();
+    next(); // Ensure next() is always called if no errors occur
   };
 }
