@@ -16,7 +16,7 @@
   },
   "keywords": [],
   "author": "@gregltrnr",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Basic typescript REST API with Prisma, Express and Joi",
   "dependencies": {
     "@prisma/client": "^6.5.0",
