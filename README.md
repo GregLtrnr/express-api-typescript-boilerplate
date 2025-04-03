@@ -10,6 +10,7 @@ A clean and minimal boilerplate for building RESTful APIs with TypeScript, Prism
 - 📦 **Docker Compose** – Spin up a local database in seconds
 - 🎯 **TypeScript** – Fully typed codebase for better developer experience
 - 🧹 **ESLint & Prettier** – For consistent code formatting and linting
+- 🧪 **Unit Testing** – Built-in support for unit tests with Jest
 
 ---
 
@@ -22,6 +23,7 @@ API-BOILERPLATE
 ├── src/
 │   ├── controllers/
 │   │   └── template.ts
+│   │   └── template.test.ts
 │   ├── middlewares/
 │   │   └── validate.ts
 │   ├── routers/
@@ -29,9 +31,11 @@ API-BOILERPLATE
 │   │   └── template.ts
 │   ├── schemas/
 │   │   └── template.ts
+│   │   └── template.test.ts
 │   ├── services/
 │   │   ├── index.ts
 │   │   └── template.ts
+│   │   └── template.test.ts
 │   └── types/
 │       └── template.ts
 ├── .env.example
@@ -42,6 +46,7 @@ API-BOILERPLATE
 ├── .gitignore
 ├── package.json
 ├── tsconfig.json
+├── jest.config.ts
 └── README.md
 ```
 
@@ -91,20 +96,49 @@ To manage the container:
 
 ---
 
+## 🧪 Unit Testing with Jest
+
+This boilerplate includes built-in support for unit testing using [Jest](https://jestjs.io/). Unit tests are located alongside files with `.test.ts` suffix.
+
+### Running Tests
+
+To run all tests:
+
+```bash
+npm test
+```
+
+To run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
+To run the code coverage:
+
+```bash
+npm run test:coverage
+```
+
+---
+
 ## 🔧 Scripts
 
-| Script       | Description                              |
-| :----------- | :--------------------------------------- |
-| `dev`        | Start development server with hot-reload |
-| `build`      | Compile TypeScript with `tsup`           |
-| `start`      | Run the built JavaScript code            |
-| `lint`       | Run ESLint to check code quality         |
-| `lint:fix`   | Automatically fix ESLint issues          |
-| `db:start`   | Start Docker dev database                |
-| `db:stop`    | Stop Docker database                     |
-| `db:logs`    | View Docker container logs               |
-| `db:restart` | Restart the Docker container             |
-| `db:ps`      | Show running Docker services             |
+| Script          | Description                              |
+| :-------------- | :--------------------------------------- |
+| `dev`           | Start development server with hot-reload |
+| `build`         | Compile TypeScript with `tsup`           |
+| `start`         | Run the built JavaScript code            |
+| `lint`          | Run ESLint to check code quality         |
+| `lint:fix`      | Automatically fix ESLint issues          |
+| `db:start`      | Start Docker dev database                |
+| `db:stop`       | Stop Docker database                     |
+| `db:logs`       | View Docker container logs               |
+| `db:restart`    | Restart the Docker container             |
+| `db:ps`         | Show running Docker services             |
+| `test`          | Run all unit tests with Jest             |
+| `test:watch`    | Run tests in watch mode                  |
+| `test:coverage` | Run tests coverage                       |
 
 ---
 
@@ -114,6 +148,7 @@ To manage the container:
 - [Express](https://expressjs.com/)
 - [Prisma](https://www.prisma.io/)
 - [Joi](https://www.joi.dev/)
+- [Jest](https://jestjs.io/)
 - [ESLint](https://eslint.org/)
 - [Docker](https://docs.docker.com/get-started/get-docker/)
 
