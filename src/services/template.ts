@@ -10,7 +10,7 @@ import {
 
 const prisma = new PrismaClient();
 
-export class TemplateService {
+class TemplateService {
   async createTemplate(payload: CreateTemplateServicePayload) {
     try {
       const template = await prisma.template.create({
@@ -88,3 +88,5 @@ export class TemplateService {
     }
   }
 }
+
+export default new TemplateService();

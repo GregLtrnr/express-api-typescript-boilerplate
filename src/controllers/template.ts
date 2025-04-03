@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { TemplateService } from '@services/template';
+import templateService from '@services/template';
 import { GetTemplatesServicePayload } from '@/types/template';
-
-const templateService = new TemplateService();
 
 // Get all templates
 export const getTemplates = async (req: Request, res: Response): Promise<void> => {
@@ -44,7 +42,7 @@ export const getTemplateById = async (req: Request, res: Response): Promise<void
 // Create a new template
 export const createTemplate = async (req: Request, res: Response): Promise<void> => {
   try {
-    const template = templateService.createTemplate(req.body);
+    const template = await templateService.createTemplate(req.body);
 
     if (!template) {
       res.status(400).json({ error: 'Invalid template data' });
